@@ -10,9 +10,9 @@ def add_api_routes(app: FastAPI):
     async def say_hello(name: str):
         return {"message": f"Hello {name}"}
 
-    @app.get("/search")
-    async def search():
-        return {"message": "Search results?"}
+    # @app.get("/search")
+    # async def search():
+    #     return {"message": "Search results?"}
 
     # @app.get("/pets/{pet_id}")
     # def get_pet(pet_id: int, db: Session = Depends(get_db)):
