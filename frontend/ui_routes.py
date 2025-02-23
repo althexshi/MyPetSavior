@@ -15,7 +15,7 @@ def add_ui_routes():
         ''')
 
         ui.add_head_html('<link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />')
-        ui.label("Welcome to PetSavior!").classes("w-full text-center").style("font-size: 100px; font-weight: bold;")
+        ui.label("Welcome to Pet Savior!").classes("w-full text-center").style("font-size: 100px; font-weight: bold;")
         with ui.element('div').classes('search-container'):
             ui.html('<i class="ti-search search-icon"></i>')
             search_input = ui.input(placeholder='Search for Pets...')
