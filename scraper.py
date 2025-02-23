@@ -8,13 +8,16 @@ import pandas as pd
 import time
 
 
+def clean_text(text, label):
+    """Remove labels like 'Name:', 'Age:' from data."""
+    return text.replace(f"{label}: ", "").strip()
+
+
 def scrape_24petconnect():
-    # Configure Chrome options
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Run in background
+    options.add_argument("--headless")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
-    # Initialize driver
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=options
@@ -22,36 +25,47 @@ def scrape_24petconnect():
 
     try:
         driver.get("https://24petconnect.com/HaywardAdoptablePets?at=DOG")
-
-        # Wait for content to load
         WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.CLASS_NAME, "gridResult"))
         )
 
-        # Scroll to load all results (adjust iterations as needed)
+        # Scroll to load all content
         for _ in range(3):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)
 
-        # Find all animal cards
-        animal_cards = driver.find_elements(By.CLASS_NAME, "gridResult")
         animals = []
-
-        for card in animal_cards:
+        for card in driver.find_elements(By.CLASS_NAME, "gridResult"):
             try:
+                # Clean and format NAME (e.g., "ARLO (A134019)" → "ARLO")
+                raw_name = clean_text(card.find_element(By.CLASS_NAME, 'line_Name').text, "Name")
+                clean_name = raw_name.split('(')[0].strip()
+
+                # Clean and format AGE (e.g., "1 Year 11 Months" → "1 year, 11 months old")
+                raw_age = clean_text(card.find_element(By.CLASS_NAME, 'line_Age').text, "Age")
+                formatted_age = (
+                        raw_age.replace("Year", "year")
+                        .replace("Month", "month")
+                        .replace(" ", ", ", 1)  # Add comma after year
+                        + " old"
+                )
+
+                # Extract other fields
                 animal_data = {
-                    'ID': card.get_attribute('id').replace('Result_', ''),
-                    'Name': card.find_element(By.CLASS_NAME, 'line_Name').text,
-                    'Breed': card.find_element(By.CLASS_NAME, 'line_Breed').text,
-                    'Age': card.find_element(By.CLASS_NAME, 'line_Age').text,
-                    'Gender': card.find_element(By.CLASS_NAME, 'line_Gender').text,
-                    'Location': card.find_element(By.CLASS_NAME, 'line_Locatedat').text,
-                    'Image': card.find_element(By.TAG_NAME, 'img').get_attribute('src'),
-                    'URL': driver.current_url
+                    "Name": clean_name,
+                    "Age": formatted_age,
+                    "Breed": clean_text(card.find_element(By.CLASS_NAME, 'line_Breed').text, "Breed"),
+                    "Gender": clean_text(card.find_element(By.CLASS_NAME, 'line_Gender').text, "Gender"),
+                    "Location": clean_text(card.find_element(By.CLASS_NAME, 'line_Locatedat').text, "Located At"),
+                    "Image": card.find_element(By.TAG_NAME, 'img').get_attribute('src')
                 }
+
+                # Optional: Filter for ARLO only
+                # if clean_name == "ARLO":
                 animals.append(animal_data)
+
             except Exception as e:
-                print(f"Error processing card: {str(e)}")
+                print(f"Skipping entry due to error: {e}")
                 continue
 
         return animals
@@ -60,13 +74,10 @@ def scrape_24petconnect():
         driver.quit()
 
 
-# Run scraper
+# Run and save
 data = scrape_24petconnect()
-
-# Save to CSV
 if data:
-    df = pd.DataFrame(data)
-    df.to_csv('hayward_dogs.csv', index=False)
-    print(f"Successfully saved {len(data)} dogs to hayward_dogs.csv")
+    pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
+    print("Spreadsheet generated without repetitive labels!")
 else:
     print("No data found")
