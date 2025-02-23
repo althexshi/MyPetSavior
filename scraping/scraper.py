@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
-from backend.testAnimal import insert_pet
+from database.insert import insert_pet
 
 def clean_text(text, label):
     """Remove labels like 'Name:', 'Age:', 'Located At:' from data."""
@@ -57,22 +57,22 @@ def scrape_24petconnect():
                 # Extract image URL
                 image = card.find_element(By.TAG_NAME, 'img').get_attribute('src')
 
-                # Create animal data dictionary
-                animal_data = {
-                    "Name": clean_name,
-                    "Age": formatted_age,
-                    "Breed": breed,
-                    "Gender": gender,
-                    "Location": location,  # This should now be clean
-                    "Image": image
-                }
+                # # Create animal data dictionary
+                # animal_data = {
+                #     "Name": clean_name,
+                #     "Age": formatted_age,
+                #     "Breed": breed,
+                #     "Gender": gender,
+                #     "Location": location,  # This should now be clean
+                #     "Image": image
+                # }
 
                 # Insert into database
                 insert_pet(location, None, clean_name, breed, formatted_age, None, image, gender)
 
                 # Optional: Filter for ARLO only
                 # if clean_name == "ARLO":
-                animals.append(animal_data)
+                # animals.append(animal_data)
 
             except Exception as e:
                 print(f"Skipping entry due to error: {e}")
@@ -85,8 +85,8 @@ def scrape_24petconnect():
 
 # Run and save
 data = scrape_24petconnect()
-if data:
-    pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
-    print("Spreadsheet generated without repetitive labels!")
-else:
-    print("No data found")
+# if data:
+#     pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
+#     print("Spreadsheet generated without repetitive labels!")
+# else:
+#     print("No data found")
