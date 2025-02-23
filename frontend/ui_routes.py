@@ -27,4 +27,9 @@ def add_ui_routes():
                 'width: 650px;'
         )
 
+    # @ui.page("/search?{text}")
+    # def search_page(text):
+
+
+
 
