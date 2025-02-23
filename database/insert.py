@@ -1,3 +1,4 @@
+from nicegui.html import source
 from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base
@@ -13,11 +14,11 @@ def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, se
         ).first()
 
         if existing_pet:
-            print(f"Pet {pet_name} from {shelter} already exists. Skipping insert.")
+            print(f"Pet {pet_name} from {source} already exists. Skipping insert.")
             return
 
         new_pet = Animals(
-            shelter_name = shelter,
+            source_name = source,
             location = location,
             pet_name = pet_name,
             breed = breed,
