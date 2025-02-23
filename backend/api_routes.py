@@ -11,8 +11,8 @@ async def search_pets(
     query = None,
     sex = None,
     breed = None,
-    min_age: int | None = Query(None),
-    max_age: int | None = Query(None),
+    min_age = 0,
+    max_age = 30,
     species = None
 ):
     print("Begin query")
