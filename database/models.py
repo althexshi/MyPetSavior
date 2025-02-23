@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, Enum, TIMESTAMP
 from sqlalchemy.sql import func
-# from database.database import Base
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
+from database.database import Base
 
 class PetDetails(Base):
     __tablename__ = 'pet_details'
