@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.database import engine  # Base should be the declarative base from SQLAlchemy
 from database.database import Base
-from database.models import PetDetails  # Ensure that PetDetails is defined in models.py
+from database.models import Animals  # Ensure that PetDetails is defined in models.py
 from database.database import get_db
 
 # Initialize the database (creates tables if they don't exist)
@@ -12,14 +12,14 @@ app = FastAPI()
 # Route to get a pet by ID
 @app.get("/pets/{pet_id}")
 def get_pet(pet_id: int, db: Session = Depends(get_db)):
-    pet = db.query(PetDetails).filter(PetDetails.pet_id == pet_id).first()
+    pet = db.query(Animals).filter(Animals.pet_id == pet_id).first()
     if pet is None:
         raise HTTPException(status_code=404, detail="Pet not found")
     return pet
 
 # Route to create a new pet entry
 @app.post("/pets/")
-def create_pet(pet: PetDetails, db: Session = Depends(get_db)):
+def create_pet(pet: Animals, db: Session = Depends(get_db)):
     db.add(pet)
     db.commit()
     db.refresh(pet)
