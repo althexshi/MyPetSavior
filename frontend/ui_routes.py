@@ -2,10 +2,11 @@ from unittest import result
 
 from fastapi import FastAPI
 from nicegui import ui
-import requests
+import asyncio
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
 from database.models import Animals
+from backend.api_routes import search_pets
 
 host_url = "http://127.0.0.1:8000/"
 
@@ -41,6 +42,7 @@ def add_ui_routes():
         ui.add_head_html('<link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />')
         ui.label("Welcome to Pet Savior!").classes("w-full text-center").style("font-size: 100px; font-family: 'Calibre', serif; font-weight: bold; color: #F2BFA4")
 
+        # Center search bar
         with ui.element('div').classes('search-container'):
             ui.html('<i class="ti-search search-icon"></i>')
             search_input = ui.input(placeholder='Search for Pets...')
@@ -52,8 +54,6 @@ def add_ui_routes():
                 'font-size: 16px; '
                 'width: 650px;'
         )
-
-
 
         states = [
             'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana',
@@ -110,38 +110,25 @@ def add_ui_routes():
                          'transform: translateX(-50%); '
                          'top: 720px;')
 
-        @ui.page("/search")
-        def search_page(query: str = None):
 
-            ui.add_head_html(head_html)
-            # Request not working
-            # try:
-            #     print("Begin request")
-            #     pets = requests.get(f"{host_url}/api/search?query={query}", timeout=2)
-            #     print(pets.json())
-            #         # Want to use nicegui tables as placeholder for now
-            # except Exception as e:
-            #     print("Timed Out")
+    @ui.page("/search")
+    async def search_page(query: str = None):
 
-            db: Session = SessionLocal()
-            try:
-                result = db.query(Animals.pet_name).all()
-                pets = [row[0] for row in result]
-                ui.label(pets)
-            except Exception as e:
-                print(f"Error reading {e}")
-            finally:
-                db.close()
+        ui.add_head_html(head_html)
+        pets = await search_pets(query)
+        if pets:
+            ui.label(pets)
 
-            # On any change it should search database again?
-            with ui.row().classes("justify-center items-center w-full text-center"):
-                if query is not None:
-                    search_input = ui.input(value=query, placeholder='Search for Pets...')
-                else:
-                    search_input = ui.input(placeholder='Search for Pets...')
 
-                # On enter, search again
-                search_input.classes('search-input')
-                search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
-                # Icon
-                ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
+        # On any change it should search database again?
+        with ui.row().classes("justify-center items-center w-full text-center"):
+            if query is not None:
+                search_input = ui.input(value=query, placeholder='Search for Pets...')
+            else:
+                search_input = ui.input(placeholder='Search for Pets...')
+
+            # On enter, search again
+            search_input.classes('search-input')
+            search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
+            # Icon
+            ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
