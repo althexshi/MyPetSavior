@@ -22,7 +22,9 @@ def add_api_routes(app: FastAPI):
             q = db.query(Animals)
 
             if query:
-                q = q.filter(Animals.pet_name.ilike(f"%{query}%"))
+                q = q.filter(Animals.pet_name.ilike(f"{query}%"))
+
+
             if sex:
                 q = q.filter(Animals.sex == sex)
             if breed:
