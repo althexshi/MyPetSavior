@@ -1,14 +1,19 @@
+from unittest import result
+
 from fastapi import FastAPI
 from nicegui import ui
 
-result = ui.label('')
-
-@ui.page("/")
-def main_page():
-    ui.label("Welcome to PetSavior!").style("font-size: 24px; font-weight: bold;")
-    ui.button("Find a Pet", on_click=lambda: ui.notify("Coming soon!"))
-    ui.input(label='Text', placeholder='start typing', on_change=lambda e: result.set_text('you typed: ' + e.value),
-             validation={'Input too long': lambda value: len(value) < 20})
-
-ui.run()
+def add_ui_routes():
+    @ui.page("/")
+    def main_page():
+        ui.label("Welcome to PetSavior!").style("font-size: 24px; font-weight: bold;")
+        ui.button("Find a Pet", on_click=lambda: ui.notify("Coming soon!"))
+        search_input = ui.input(placeholder='Search For Pets...')
+        search_input.style(
+            'border-radius: 25px; '
+            'padding: 10px; '
+            'border: 5px solid #008080; '
+            'font-size: 16px; '
+            'width: 600px;'
+)
 
