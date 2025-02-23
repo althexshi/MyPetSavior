@@ -4,13 +4,12 @@ from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base
 from database.models import Animals
 
-def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
+def insert_pet(source, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
         # Duplicate check (uses source_name which should match shelter parameter)
         existing_pet = db.query(Animals).filter(
             Animals.pet_name == pet_name,
-            Animals.source_name == shelter  # Critical: Ensure shelter maps to source_name
         ).first()
 
         if existing_pet:
