@@ -106,9 +106,9 @@ def add_ui_routes():
 
         pet_button = ui.button('Click here to find your pet!', on_click=lambda: ui.notify('Unavailable'))
         pet_button.style('position: absolute; '
-                     'left: 50%; '                  
-                     'transform: translateX(-50%); '
-                     'top: 720px;')
+                     'left: 50%; '
+                         'transform: translateX(-50%); '
+                         'top: 720px;')
 
         @ui.page("/search")
         def search_page(query: str = None):
@@ -132,7 +132,6 @@ def add_ui_routes():
                 print(f"Error reading {e}")
             finally:
                 db.close()
-
 
             # On any change it should search database again?
             with ui.row().classes("justify-center items-center w-full text-center"):
