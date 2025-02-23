@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database.database import engine, Base  # Base should be the declarative base from SQLAlchemy
+from database.database import engine  # Base should be the declarative base from SQLAlchemy
+from database.database import Base
 from database.models import PetDetails  # Ensure that PetDetails is defined in models.py
 from database.db import get_db
 

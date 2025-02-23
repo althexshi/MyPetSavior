@@ -1,9 +1,11 @@
 from sqlalchemy import Column, Integer, String, Text, Enum, TIMESTAMP
 from sqlalchemy.sql import func
-from database import Base  # Import the Base class from database.py
+# from database.database import Base
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
 class PetDetails(Base):
-    __tablename__ = 'animals'
+    __tablename__ = 'pet_details'
 
     pet_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     shelter_name = Column(String(255), nullable=False)
