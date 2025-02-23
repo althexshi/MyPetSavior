@@ -27,5 +27,3 @@ def test_insert_pet(shelter, location, pet_name, breed, age, url_link, image_lin
     finally:
         db.close()
 
-if __name__ == "__main__":
-    test_insert_pet()
