@@ -4,6 +4,6 @@ Dmitriy Gamolya
 
 Brandon Hu
 
-Jianqi (Alex) Shi
+Alex Shi
 
 Andy Martin-Valencia
