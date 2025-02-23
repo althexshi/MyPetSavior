@@ -66,7 +66,7 @@ def add_ui_routes():
             "width: 400px; margin: 0 auto; text-align: center; ")
 
     @ui.page("/search")
-    async def search_page(query: str = None, sex: str = None, breed: str = None, min_age: int = 0, max_age: int = 30):
+    async def search_page(query: str = None, sex: str = "Any", breed: str = None, min_age: int = 1, max_age: int = 30):
         ui.add_head_html(head_html)
 
         # Results container
@@ -77,14 +77,14 @@ def add_ui_routes():
             search_input = ui.input(value=query or '', placeholder='Search for Pets...').classes('search-input')
             sex_select = ui.select(options=['Any', 'Male', 'Female', 'Unknown'], value=sex).classes('w-40')
             breed_input = ui.input(value=breed or '', placeholder='Breed').classes('w-40')
-            min_age_input = ui.input(value=str(min_age) if min_age else 0, placeholder='Min Age').classes('w-20')
+            min_age_input = ui.input(value=str(min_age) if min_age else 1, placeholder='Min Age').classes('w-20')
             max_age_input = ui.input(value=str(max_age) if max_age else 30, placeholder='Max Age').classes('w-20')
 
             search_input.on('keydown.enter', lambda: ui.navigate.to(
                 f"/search?query={search_input.value}"
                 f"&sex={sex_select.value}"
                 f"&breed={breed_input.value}"
-                f"&min_age={min_age_input.value if min_age_input.value.isdigit() else 0}"
+                f"&min_age={min_age_input.value if min_age_input.value.isdigit() else 1}"
                 f"&max_age={max_age_input.value if max_age_input.value.isdigit() else 30}"
             ))
 
@@ -93,10 +93,10 @@ def add_ui_routes():
             from backend.api_routes import search_pets
             pets = await search_pets(  # Add await here
                 query=query,
-                sex=sex_select.value if sex_select.value != 'Any' else None,
+                sex=sex_select.value if sex_select.value != 'Any' else 'Any',
                 breed=breed_input.value or None,
-                min_age=int(min_age_input.value) if min_age_input.value else None,
-                max_age=int(max_age_input.value) if max_age_input.value else None
+                min_age=int(min_age_input.value) if min_age_input.value else 1,
+                max_age=int(max_age_input.value) if max_age_input.value else 30
             )
 
             # Clear previous results

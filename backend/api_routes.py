@@ -9,9 +9,9 @@ router = APIRouter()
 @router.get("/api/search/{query}/{sex}/{breed}/{min_age}/{max_age}/{species}")
 async def search_pets(
     query = None,
-    sex = None,
+    sex = "Any",
     breed = None,
-    min_age = 0,
+    min_age = 1,
     max_age = 30,
     species = None
 ):
@@ -25,7 +25,7 @@ async def search_pets(
             q = q.filter(Animals.pet_name.ilike(f"{query}%"))  # Case-insensitive search
 
         # Other filters
-        if sex:
+        if sex and sex != "Any":
             q = q.filter(Animals.sex == sex)
         if breed:
             q = q.filter(Animals.breed == breed)
