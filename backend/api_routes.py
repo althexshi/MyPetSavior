@@ -1,29 +1,22 @@
 from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
-from database.database import engine  # Base should be the declarative base from SQLAlchemy
-from database.database import Base
-from database.models import Animals  # Ensure that PetDetails is defined in models.py
-from database.database import get_db
+from database.database import SessionLocal, engine, Base, get_db
+from database.models import Animals
 
 def add_api_routes(app: FastAPI):
-    @app.get("/hello/{name}")
-    async def say_hello(name: str):
-        return {"message": f"Hello {name}"}
+    @app.get("/api/search")
+    def search_pets(query: str = None):
 
-    # @app.get("/search")
-    # async def search():
-    #     return {"message": "Search results?"}
+        print("Begin query")
+        db: Session = SessionLocal()
+        try:
+            result = db.query(Animals.pet_name).all()
+            pets = [row[0] for row in result]
+            return pets
+        except Exception as e:
+            print(f"Error reading {e}")
+            return None
+        finally:
+            db.close()
 
-    # @app.get("/pets/{pet_id}")
-    # def get_pet(pet_id: int, db: Session = Depends(get_db)):
-    #     pet = db.query(Animals).filter(Animals.pet_id == pet_id).first()
-    #     if pet is None:
-    #         raise HTTPException(status_code=404, detail="Pet not found")
-    #     return pet
-    #
-    # @app.post("/pets/")
-    # def create_pet(pet: Animals, db: Session = Depends(get_db)):
-    #     db.add(pet)
-    #     db.commit()
-    #     db.refresh(pet)
-    #     return pet
