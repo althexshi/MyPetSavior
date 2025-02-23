@@ -2,24 +2,32 @@ from unittest import result
 
 from fastapi import FastAPI
 from nicegui import ui
+import requests
+from sqlalchemy.orm import Session
+from database.database import SessionLocal
+from database.models import Animals
 
+host_url = "http://127.0.0.1:8000/"
 
-def add_ui_routes():
-    @ui.page("/")
-    def main_page():
-        ui.add_head_html('''
+head_html = '''
             <style>
                 .search-input { border-radius: 25px; padding: 10px; border: 1px solid #008080; font-size: 16px; width: 650px; }
             </style>
             <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
             <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />
-        ''')
+        '''
+
+def add_ui_routes():
+    @ui.page("/")
+    def main_page():
+        # Headers that define values for us to use easily later + Eva icons & themify icons
+        ui.add_head_html(head_html)
 
 
         # Big Welcome Label
-        ui.label("Welcome to PetSavior!").classes("w-full text-center").style("font-size: 100px; font-weight: bold;")
+        ui.label("Welcome to Pet Savior!").classes("w-full text-center").style("font-size: 100px; font-weight: bold;")
 
-        # Center
+        # Center search bar
         with (ui.row().classes("justify-center items-center w-full text-center")):
             # Search bar sends to search page on 'Enter'
             search_input = ui.input(placeholder='Search for Pets...').classes('search-input')
@@ -29,6 +37,27 @@ def add_ui_routes():
 
     @ui.page("/search")
     def search_page(query: str = None):
+
+        ui.add_head_html(head_html)
+        # Request not working
+        # try:
+        #     print("Begin request")
+        #     pets = requests.get(f"{host_url}/api/search?query={query}", timeout=2)
+        #     print(pets.json())
+        #         # Want to use nicegui tables as placeholder for now
+        # except Exception as e:
+        #     print("Timed Out")
+
+        db: Session = SessionLocal()
+        try:
+            result = db.query(Animals.pet_name).all()
+            pets = [row[0] for row in result]
+            ui.label(pets)
+        except Exception as e:
+            print(f"Error reading {e}")
+        finally:
+            db.close()
+
 
         # On any change it should search database again?
         with ui.row().classes("justify-center items-center w-full text-center"):
