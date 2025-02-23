@@ -6,12 +6,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
-
+from backend.testAnimal import insert_pet
 
 def clean_text(text, label):
-    """Remove labels like 'Name:', 'Age:' from data."""
+    """Remove labels like 'Name:', 'Age:', 'Located At:' from data."""
     return text.replace(f"{label}: ", "").strip()
-
 
 def scrape_24petconnect():
     options = webdriver.ChromeOptions()
@@ -44,21 +43,32 @@ def scrape_24petconnect():
                 # Clean and format AGE (e.g., "1 Year 11 Months" → "1 year, 11 months old")
                 raw_age = clean_text(card.find_element(By.CLASS_NAME, 'line_Age').text, "Age")
                 formatted_age = (
-                        raw_age.replace("Year", "year")
-                        .replace("Month", "month")
-                        .replace(" ", ", ", 1)  # Add comma after year
-                        + " old"
+                    raw_age.replace("Year", "year")
+                    .replace("Month", "month")
+                    .replace(" ", ", ", 1)  # Add comma after year
+                    + " old"
                 )
 
-                # Extract other fields
+                # Clean and format BREED, GENDER, and LOCATION
+                breed = clean_text(card.find_element(By.CLASS_NAME, 'line_Breed').text, "Breed")
+                gender = clean_text(card.find_element(By.CLASS_NAME, 'line_Gender').text, "Gender")
+                location = clean_text(card.find_element(By.CLASS_NAME, 'line_Locatedat').text, "Located At")
+
+                # Extract image URL
+                image = card.find_element(By.TAG_NAME, 'img').get_attribute('src')
+
+                # Create animal data dictionary
                 animal_data = {
                     "Name": clean_name,
                     "Age": formatted_age,
-                    "Breed": clean_text(card.find_element(By.CLASS_NAME, 'line_Breed').text, "Breed"),
-                    "Gender": clean_text(card.find_element(By.CLASS_NAME, 'line_Gender').text, "Gender"),
-                    "Location": clean_text(card.find_element(By.CLASS_NAME, 'line_Locatedat').text, "Located At"),
-                    "Image": card.find_element(By.TAG_NAME, 'img').get_attribute('src')
+                    "Breed": breed,
+                    "Gender": gender,
+                    "Location": location,  # This should now be clean
+                    "Image": image
                 }
+
+                # Insert into database
+                insert_pet(location, None, clean_name, breed, formatted_age, None, image, gender)
 
                 # Optional: Filter for ARLO only
                 # if clean_name == "ARLO":
@@ -72,7 +82,6 @@ def scrape_24petconnect():
 
     finally:
         driver.quit()
-
 
 # Run and save
 data = scrape_24petconnect()
