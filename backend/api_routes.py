@@ -1,23 +1,58 @@
 from fastapi import FastAPI, Depends, HTTPException, APIRouter
-from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
-from database.database import SessionLocal, engine, Base, get_db
+from database.database import SessionLocal, get_db
 from database.models import Animals
-import asyncio
+from sqlalchemy import and_
 
 router = APIRouter()
 
 @router.get("/api/search/{query}")
-async def search_pets(query = None):
+@router.get("/api/search")  # Handle both path and query parameters
+async def search_pets(
+    query: str = None,
+    sex: str = None,
+    breed: str = None,
+    min_age: int = None,
+    max_age: int = None,
+    species: str = None
+):
     print("Begin query")
     db: Session = SessionLocal()
     try:
-        result = db.query(Animals.pet_name).all()
-        pets = [row[0] for row in result]
-        return pets
+        q = db.query(Animals)
+
+        # Filter by pet name starting with the query
+        if query:
+            q = q.filter(Animals.pet_name.ilike(f"{query}%"))  # Case-insensitive search
+
+        # Other filters
+        if sex:
+            q = q.filter(Animals.sex == sex)
+        if breed:
+            q = q.filter(Animals.breed == breed)
+        if min_age is not None:
+            q = q.filter(Animals.age >= min_age)
+        if max_age is not None:
+            q = q.filter(Animals.age <= max_age)
+        if species:
+            q = q.filter(Animals.source_name == species)
+
+        results = q.all()
+        return [{
+            "pet_id": animal.pet_id,
+            "name": animal.pet_name,
+            "breed": animal.breed,
+            "age": animal.age,
+            "sex": animal.sex,
+            "location": animal.location,
+            "image_url": animal.image_url
+        } for animal in results]
+
     except Exception as e:
-        print(f"Error reading {e}")
-        return None
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Database error")
     finally:
         db.close()
 
+def add_api_routes(app: FastAPI):
+    app.include_router(router)
