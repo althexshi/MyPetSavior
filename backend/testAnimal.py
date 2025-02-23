@@ -5,7 +5,7 @@ from database.models import Animals
 
 Base.metadata.create_all(bind=engine)
 
-def test_insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
+def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
         new_pet = Animals(
