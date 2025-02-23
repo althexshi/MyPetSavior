@@ -2,10 +2,11 @@ from unittest import result
 
 from fastapi import FastAPI
 from nicegui import ui
-import requests
+import asyncio
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
 from database.models import Animals
+from backend.api_routes import search_pets
 
 host_url = "http://127.0.0.1:8000/"
 
@@ -19,7 +20,7 @@ head_html = '''
 
 def add_ui_routes():
     @ui.page("/")
-    def main_page():
+    async def main_page():
         # Headers that define values for us to use easily later + Eva icons & themify icons
         ui.add_head_html(head_html)
 
@@ -36,27 +37,12 @@ def add_ui_routes():
             ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
 
     @ui.page("/search")
-    def search_page(query: str = None):
+    async def search_page(query: str = None):
 
         ui.add_head_html(head_html)
-        # Request not working
-        # try:
-        #     print("Begin request")
-        #     pets = requests.get(f"{host_url}/api/search?query={query}", timeout=2)
-        #     print(pets.json())
-        #         # Want to use nicegui tables as placeholder for now
-        # except Exception as e:
-        #     print("Timed Out")
-
-        db: Session = SessionLocal()
-        try:
-            result = db.query(Animals.pet_name).all()
-            pets = [row[0] for row in result]
+        pets = await search_pets(query)
+        if pets:
             ui.label(pets)
-        except Exception as e:
-            print(f"Error reading {e}")
-        finally:
-            db.close()
 
 
         # On any change it should search database again?

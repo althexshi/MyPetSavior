@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base, get_db
 from database.models import Animals
+import asyncio
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get("/api/search")
-def search_pets(query: str = None):
+@router.get("/api/search/{query}")
+async def search_pets(query = None):
     print("Begin query")
     db: Session = SessionLocal()
     try:
