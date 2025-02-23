@@ -1,13 +1,23 @@
+from nicegui.html import source
 from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base
 from database.models import Animals
 
-def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
+def insert_pet(source, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
+        # Duplicate check (uses source_name which should match shelter parameter)
+        existing_pet = db.query(Animals).filter(
+            Animals.pet_name == pet_name,
+        ).first()
+
+        if existing_pet:
+            print(f"Pet {pet_name} from {source} already exists. Skipping insert.")
+            return
+
         new_pet = Animals(
-            shelter_name = shelter,
+            source_name = source,
             location = location,
             pet_name = pet_name,
             breed = breed,
