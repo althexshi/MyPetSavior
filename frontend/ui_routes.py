@@ -13,9 +13,11 @@ head_html = '''
             <style>
                 .search-input { border-radius: 25px; padding: 10px; border: 1px solid #008080; font-size: 16px; width: 650px; }
             </style>
+            <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
             <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
             <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />
         '''
+
 
 def add_ui_routes():
     @ui.page("/")
@@ -36,10 +38,15 @@ def add_ui_routes():
                             transform: translateY(-50%);
                             font-size: 24px;
                             color: #008080;
-                        }</style>''')
+                        }</style>
+                                    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+            <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
+            <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />''')
         ui.query('body').style('background-color: #F5E7DE')
-        ui.add_head_html('<link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />')
-        ui.label("Welcome to Pet Savior!").classes("w-full text-center").style("font-size: 100px; font-family: 'Calibre', serif; font-weight: bold; color: #F2BFA4")
+        ui.add_head_html(
+            '<link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />')
+        ui.label("Welcome to Pet Savior!").classes("w-full text-center").style(
+            "font-size: 100px; font-family: 'Calibre', serif; font-weight: bold; color: #F2BFA4")
 
         # Center search bar
         with ui.element('div').classes('search-container'):
@@ -52,87 +59,11 @@ def add_ui_routes():
                 'border: 1px solid #008080; '
                 'font-size: 16px; '
                 'width: 650px;'
-        )
+            )
 
-        states = [
-            'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana',
-            'Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada',
-            'New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina',
-            'South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming',
-        ]
-        state_select = ui.select(label='Pick your State: ', options=states, with_input=True,on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        shelter_name = ['shelter1', 'shelter2', 'shelter3']
-        shelter_select = ui.select(label='Pick your Shelter: ', options=shelter_name, with_input=True,
-                  on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        gender = ['Male', 'Female']
-        gender_select = ui.select(label='Gender: ', options=gender, with_input=True, on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        animal = ['Adoptable Dogs', 'Adoptable Cats', 'Adoptable Small Animals']
-        animal_select = ui.select(label='Animals: ', options=animal, with_input=True, on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        allergic = ['Yes', 'No']
-        allergic_select = ui.select(label='Allergies? ', options=allergic, with_input=True, on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        preferred_age = ["None", "0-1 years", "2-5 years", "6-10 years old", "11+ years old"]
-        preferred_age_select = ui.select(label='Preferred Age: ', options=preferred_age, with_input=True,on_change=lambda e: ui.notify(e.value)).classes('w-40')
-
-        shelter_select.style('position: absolute; '
-                             'left: 30%; '
-                             'transform: translateX(-50%); '
-                             'top: 370px;')
-        state_select.style('position: absolute; '          
-                     'left: 50%; '                   
-                     'transform: translateX(-50%); ' 
-                     'top: 370px;')
-        gender_select.style('position: absolute; '          
-                     'left: 70%; '                   
-                     'transform: translateX(-50%); ' 
-                     'top: 370px;')
-        animal_select.style('position: absolute; '          
-                     'left: 30%; '                   
-                     'transform: translateX(-50%); ' 
-                     'top: 500px;')
-        allergic_select.style('position: absolute; '          
-                     'left: 50%; '                   
-                     'transform: translateX(-50%); ' 
-                     'top: 500px;')
-        preferred_age_select.style('position: absolute; '          
-                     'left: 70%; '                   
-                     'transform: translateX(-50%); ' 
-                     'top: 500px;')
-
-        pet_button = ui.button('Click here to find your pet!', on_click=lambda: ui.notify('Unavailable'))
-        pet_button.style('position: absolute; '
-                     'left: 50%; '
-                         'transform: translateX(-50%); '
-                         'top: 720px;')
-
-
-    # @ui.page("/search")
-    # async def search_page(query: str = None):
-    #
-    #     ui.add_head_html(head_html)
-    #
-    #
-    #     pets = await search_pets(query, sex)
-    #     if pets:
-    #         ui.label(pets)
-    #
-    #     # On any change it should search database again?
-    #     with ui.row().classes("justify-center items-center w-full text-center"):
-    #         if query is not None:
-    #             search_input = ui.input(value=query, placeholder='Search for Pets...')
-    #         else:
-    #             search_input = ui.input(placeholder='Search for Pets...')
-    #
-    #         # On enter, search again
-    #         search_input.classes('search-input')
-    #         search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
-    #         # Icon
-    #         ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
-
+        src = 'https://lottie.host/0bc74d91-888a-453c-a078-cfefaf784e45/FJLJ2LV1bw.json'
+        ui.html(f'<lottie-player src="{src}" loop autoplay />').style(
+            "width: 400px; margin: 0 auto; text-align: center; ")
 
     @ui.page("/search")
     async def search_page(query: str = None, sex: str = None, breed: str = None, min_age: int = 0, max_age: int = 30):
@@ -156,7 +87,6 @@ def add_ui_routes():
                 f"&min_age={min_age_input.value if min_age_input.value.isdigit() else 0}"
                 f"&max_age={max_age_input.value if max_age_input.value.isdigit() else 30}"
             ))
-
 
         try:
             # Directly call search_pets with all filters (now properly awaited)
