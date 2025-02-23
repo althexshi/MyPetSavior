@@ -1,22 +1,22 @@
+from sqlalchemy import nullsfirst
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base
-from database.models import PetDetails
+from database.models import Animals
 
 Base.metadata.create_all(bind=engine)
 
 def test_insert_pet():
     db: Session = SessionLocal()
     try:
-        new_pet = PetDetails(
-            shelter_name="Test Shelter",
-            location="Test Location",
-            pet_name="Test Pet",
-            breed="Test Breed",
-            age=2,
-            behavior="Friendly",
-            health_condition="Healthy",
-            vaccination_status="vaccinated",
-            pet_history="No known issues."
+        new_pet = Animals(
+            shelter_name = "Adopt Today!",
+            location = "Fremont, CA",
+            pet_name = "Joe",
+            breed = "German Shepherd",
+            age = 4,
+            url_link = None,
+            image_url = None,
+            sex = "Female",
         )
         db.add(new_pet)
         db.commit()

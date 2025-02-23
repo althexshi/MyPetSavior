@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, Text, Enum, TIMESTAMP
 from sqlalchemy.sql import func
 from database.database import Base
 
-class PetDetails(Base):
-    __tablename__ = 'pet_details'
+class Animals(Base):
+    __tablename__ = 'animals'
 
     pet_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     shelter_name = Column(String(255), nullable=False)
@@ -11,8 +11,7 @@ class PetDetails(Base):
     pet_name = Column(String(255), nullable=False)
     breed = Column(String(100), nullable=True)
     age = Column(Integer, nullable=True)
-    behavior = Column(Text, nullable=True)
-    health_condition = Column(String(255), nullable=True)
-    vaccination_status = Column(Enum('vaccinated', 'not_vaccinated', 'pending'), default='pending')
-    pet_history = Column(Text, nullable=True)
+    url_link = Column(String(255), nullable=True)
+    image_url = Column(String(255), nullable=True)
+    sex = Column(Enum('Male', 'Female', 'Unknown'), nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
