@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, APIRouter
+from fastapi import FastAPI, Depends, HTTPException, APIRouter, Query
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, get_db
 from database.models import Animals
@@ -6,15 +6,14 @@ from sqlalchemy import and_
 
 router = APIRouter()
 
-@router.get("/api/search/{query}")
-@router.get("/api/search")  # Handle both path and query parameters
+@router.get("/api/search/{query}/{sex}/{breed}/{min_age}/{max_age}/{species}")
 async def search_pets(
-    query: str = None,
-    sex: str = None,
-    breed: str = None,
-    min_age: int = None,
-    max_age: int = None,
-    species: str = None
+    query = None,
+    sex = None,
+    breed = None,
+    min_age: int | None = Query(None),
+    max_age: int | None = Query(None),
+    species = None
 ):
     print("Begin query")
     db: Session = SessionLocal()

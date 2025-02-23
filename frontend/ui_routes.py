@@ -1,6 +1,5 @@
 from unittest import result
-
-from fastapi import FastAPI
+from fastapi import FastAPI, requests
 from nicegui import ui
 import asyncio
 from sqlalchemy.orm import Session
@@ -111,24 +110,83 @@ def add_ui_routes():
                          'top: 720px;')
 
 
-    @ui.page("/search")
-    async def search_page(query: str = None):
+    # @ui.page("/search")
+    # async def search_page(query: str = None):
+    #
+    #     ui.add_head_html(head_html)
+    #
+    #
+    #     pets = await search_pets(query, sex)
+    #     if pets:
+    #         ui.label(pets)
+    #
+    #     # On any change it should search database again?
+    #     with ui.row().classes("justify-center items-center w-full text-center"):
+    #         if query is not None:
+    #             search_input = ui.input(value=query, placeholder='Search for Pets...')
+    #         else:
+    #             search_input = ui.input(placeholder='Search for Pets...')
+    #
+    #         # On enter, search again
+    #         search_input.classes('search-input')
+    #         search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
+    #         # Icon
+    #         ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
 
-        ui.add_head_html(head_html)
-        pets = await search_pets(query)
-        if pets:
-            ui.label(pets)
+
+@ui.page("/search")
+async def search_page(query: str = None, sex: str = None, breed: str = None, min_age: int = None, max_age: int = None):
+    ui.add_head_html(head_html)
+
+    # Results container
+    results_container = ui.row().classes("w-full flex-wrap justify-center")
+
+    # Search bar and filters
+    with ui.row().classes("justify-center items-center w-full text-center gap-4"):
+        search_input = ui.input(value=query or '', placeholder='Search for Pets...').classes('search-input')
+        sex_select = ui.select(options=['Any', 'Male', 'Female', 'Unknown'], value=sex).classes('w-40')
+        breed_input = ui.input(value=breed or '', placeholder='Breed').classes('w-40')
+        min_age_input = ui.input(value=str(min_age) if min_age else '', placeholder='Min Age').classes('w-20')
+        max_age_input = ui.input(value=str(max_age) if max_age else '', placeholder='Max Age').classes('w-20')
+
+        search_input.on('keydown.enter', lambda: ui.navigate.to(
+            f"/search?query={search_input.value}"
+            f"&sex={sex_select.value}"
+            f"&breed={breed_input.value}"
+            f"&min_age={min_age_input.value if min_age_input.value.isdigit() else ''}"
+            f"&max_age={max_age_input.value if max_age_input.value.isdigit() else ''}"
+        ))
 
 
-        # On any change it should search database again?
-        with ui.row().classes("justify-center items-center w-full text-center"):
-            if query is not None:
-                search_input = ui.input(value=query, placeholder='Search for Pets...')
+    try:
+        # Directly call search_pets with all filters (now properly awaited)
+        from backend.api_routes import search_pets
+        pets = await search_pets(  # Add await here
+            query=query,
+            sex=sex_select.value if sex_select.value != 'Any' else None,
+            breed=breed_input.value or None,
+            min_age=int(min_age_input.value) if min_age_input.value else None,
+            max_age=int(max_age_input.value) if max_age_input.value else None
+        )
+
+        # Clear previous results
+        results_container.clear()
+        with results_container:
+            if not pets:
+                ui.label("No pets found").classes("text-xl")
             else:
-                search_input = ui.input(placeholder='Search for Pets...')
+                # Display results in cards
+                for pet in pets:
+                    with ui.card().classes("w-64 m-4"):
+                        if pet['image_url']:
+                            ui.image(pet['image_url']).classes("w-64 h-64 object-cover")
+                        with ui.card_section():
+                            ui.label(pet['name']).classes("text-xl font-bold")
+                            ui.label(f"Breed: {pet['breed'] or 'Unknown'}")
+                            ui.label(f"Age: {pet['age'] or '?'}")
+                            ui.label(f"Sex: {pet['sex'] or 'Unknown'}")
+                            ui.label(f"Location: {pet['location']}")
 
-            # On enter, search again
-            search_input.classes('search-input')
-            search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
-            # Icon
-            ui.icon('eva-search-outline').classes('text-5xl').style('margin-right: 10px')
+    except Exception as e:
+        with results_container:
+            ui.label(f"Error: {str(e)}").classes("text-red-500 text-xl")
