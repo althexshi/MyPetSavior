@@ -8,7 +8,7 @@ from database.database import SessionLocal
 from database.models import Animals
 from backend.api_routes import search_pets
 
-host_url = "http://127.0.0.1:8000/"
+host_url = "https://petsavior.onrender.com"
 
 head_html = '''
             <style>
