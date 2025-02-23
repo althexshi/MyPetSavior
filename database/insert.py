@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, Base
 from database.models import Animals
 
-Base.metadata.create_all(bind=engine)
-
 def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
