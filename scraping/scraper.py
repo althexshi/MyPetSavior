@@ -84,7 +84,11 @@ def scrape_24petconnect():
         driver.quit()
 
 # Run and save
-data = scrape_24petconnect()
+
+
+# data = scrape_24petconnect()
+
+
 # if data:
 #     pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
 #     print("Spreadsheet generated without repetitive labels!")
