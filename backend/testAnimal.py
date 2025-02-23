@@ -5,18 +5,18 @@ from database.models import Animals
 
 Base.metadata.create_all(bind=engine)
 
-def test_insert_pet():
+def test_insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
         new_pet = Animals(
-            shelter_name = "Adopt Today!",
-            location = "Fremont, CA",
-            pet_name = "Joe",
-            breed = "German Shepherd",
-            age = 4,
-            url_link = None,
-            image_url = None,
-            sex = "Female",
+            shelter_name = shelter,
+            location = location,
+            pet_name = pet_name,
+            breed = breed,
+            age = age,
+            url_link = url_link,
+            image_url = image_link,
+            sex = sex,
         )
         db.add(new_pet)
         db.commit()
