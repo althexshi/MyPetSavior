@@ -17,6 +17,7 @@ head_html = '''
                             position: relative;
                             width: 650px;
                             margin: 0 auto;  /* centers the container horizontally */
+                            
                         }
                 .search-container input {
                             width: 100%;
@@ -31,6 +32,7 @@ head_html = '''
                             color: #008080;
                         }
             </style>
+            <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
             <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
             <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />
         '''
@@ -89,11 +91,18 @@ def add_ui_routes():
             "font-size: 100px; font-family: 'Calibre', serif; font-weight: bold; color: #F2BFA4")
 
         # Center search bar
-        with ui.element('div').classes('search-container'):
+        with ui.element('div').classes('search-container flex items-center gap-2'):
             ui.html('<i class="ti-search search-icon"></i>')
-            search_input = ui.input(placeholder='Search for Pets...')
-            ui.button('filter', icon='eva-funnel-outline', on_click=lambda: filter_dialog.open())
+            search_input = ui.input(placeholder='Search for Pets...').classes('search-input')
             search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
+
+        ui.button('filter', icon='eva-funnel-outline', on_click=lambda: filter_dialog.open()).style("margin: 0 auto;")
+
+
+        src = 'https://lottie.host/0bc74d91-888a-453c-a078-cfefaf784e45/FJLJ2LV1bw.json'
+        ui.html(f'<lottie-player src="{src}" loop autoplay />').style("width: 400px; margin: 0 auto; text-align: center; ")
+
+
 
     @ui.page("/search")
     async def search_page(query: str = None):
