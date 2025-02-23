@@ -7,8 +7,6 @@ from database.database import SessionLocal
 from database.models import Animals
 from backend.api_routes import search_pets
 
-host_url = "https://petsavior.onrender.com/"
-
 head_html = '''
             <style>
                 .search-input { border-radius: 25px; padding: 10px; border: 1px solid #008080; font-size: 16px; width: 650px; }

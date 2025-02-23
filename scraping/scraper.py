@@ -91,7 +91,7 @@ def scrape_24petconnect():
                 insert_pet(location, None, clean_name, breed, formatted_age, None, image, gender)
 
                 # Add to the list of animals
-                animals.append(animal_data)
+                # animals.append(animal_data)
 
             except Exception as e:
                 print(f"Skipping entry due to error: {e}")
@@ -107,9 +107,9 @@ def scrape_24petconnect():
 # Run the scraper and save results
 if __name__ == "__main__":
     data = scrape_24petconnect()
-    if data:
-        # Save to CSV
-        pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
-        print("Spreadsheet generated without repetitive labels!")
-    else:
-        print("No data found")
+    # if data:
+    #     # Save to CSV
+    #     pd.DataFrame(data).to_csv('hayward_dogs_clean.csv', index=False)
+    #     print("Spreadsheet generated without repetitive labels!")
+    # else:
+    #     print("No data found")
