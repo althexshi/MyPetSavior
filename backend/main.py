@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import engine, Base  # Base should be the declarative base from SQLAlchemy
-from models import PetDetails  # Ensure that PetDetails is defined in models.py
-from db import get_db
+from database.database import engine, Base  # Base should be the declarative base from SQLAlchemy
+from database.models import PetDetails  # Ensure that PetDetails is defined in models.py
+from database.db import get_db
 
 # Initialize the database (creates tables if they don't exist)
 Base.metadata.create_all(bind=engine)
