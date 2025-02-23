@@ -6,6 +6,16 @@ from database.models import Animals
 def insert_pet(shelter, location, pet_name, breed, age, url_link, image_link, sex):
     db: Session = SessionLocal()
     try:
+        # Duplicate check (uses source_name which should match shelter parameter)
+        existing_pet = db.query(Animals).filter(
+            Animals.pet_name == pet_name,
+            Animals.source_name == shelter  # Critical: Ensure shelter maps to source_name
+        ).first()
+
+        if existing_pet:
+            print(f"Pet {pet_name} from {shelter} already exists. Skipping insert.")
+            return
+
         new_pet = Animals(
             shelter_name = shelter,
             location = location,
