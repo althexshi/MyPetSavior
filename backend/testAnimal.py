@@ -27,5 +27,4 @@ def test_insert_pet():
     finally:
         db.close()
 
-if __name__ == "__main__":
-    test_insert_pet()
+test_insert_pet()
