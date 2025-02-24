@@ -9,7 +9,11 @@ from backend.api_routes import search_pets
 
 head_html = '''
             <style>
-                .search-input { border-radius: 25px; padding: 10px; border: 1px solid #008080; font-size: 16px; width: 650px; }
+                .search-container { position: relative; width: 650px; margin: 0 auto;  /* centers the container horizontally */ }
+                .search-container input {border-radius: 25px; border: 1px solid #008080; font-size: 16px; padding-left: 50px; }
+                .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #008080; }
+                .no-underline .q-field__control { border-bottom: none; /* Removes the bottom border */ }
+                .no-underline .q-field__control:focus-within {box-shadow: none; /* Removes the focus (blue) outline */}
             </style>
             <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
             <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
@@ -20,44 +24,19 @@ head_html = '''
 def add_ui_routes():
     @ui.page("/")
     def main_page():
-        ui.add_head_html('''<style>.search-container {
-                            position: relative;
-                            width: 650px;
-                            margin: 0 auto;  /* centers the container horizontally */
-                        }
-                        .search-container input {
-                            width: 100%;
-                            padding-left: 50px;
-                        }
-                        .search-icon {
-                            position: absolute;
-                            left: 15px;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            font-size: 24px;
-                            color: #008080;
-                        }</style>
-                                    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-            <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
-            <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />''')
+        ui.add_head_html(head_html)
         ui.query('body').style('background-color: #F5E7DE')
-        ui.add_head_html(
-            '<link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />')
         ui.label("Welcome to Pet Savior!").classes("w-full text-center").style(
             "font-size: 100px; font-family: 'Calibre', serif; font-weight: bold; color: #F2BFA4")
 
         # Center search bar
         with ui.element('div').classes('search-container'):
             ui.html('<i class="ti-search search-icon"></i>')
+            # ui.icon('eva-search-outline')
             search_input = ui.input(placeholder='Search for Pets...')
             search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
-            search_input.style(
-                'border-radius: 25px; '
-                'padding: 10px; '
-                'border: 1px solid #008080; '
-                'font-size: 16px; '
-                'width: 650px;'
-            )
+
+            search_input.props('borderless')
 
         src = 'https://lottie.host/0bc74d91-888a-453c-a078-cfefaf784e45/FJLJ2LV1bw.json'
         ui.html(f'<lottie-player src="{src}" loop autoplay />').style(
