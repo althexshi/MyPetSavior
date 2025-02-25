@@ -10,15 +10,21 @@ from backend.api_routes import search_pets
 head_html = '''
             <style>
                 .search-container { position: relative; width: 650px; margin: 0 auto;  /* centers the container horizontally */ }
-                .search-container input {border-radius: 25px; border: 1px solid #008080; font-size: 16px; padding-left: 50px; }
-                .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #008080; }
-                .no-underline .q-field__control { border-bottom: none; /* Removes the bottom border */ }
-                .no-underline .q-field__control:focus-within {box-shadow: none; /* Removes the focus (blue) outline */}
+                .search-container input {}
+                .q-field__append .q-icon { color: inherit; }
+                .q-field--focused .q-field__append .q-icon { color: black; }
             </style>
             <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
             <link href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css" rel="stylesheet" />
             <link href="https://unpkg.com/eva-icons@1.1.3/style/eva-icons.css" rel="stylesheet" />
         '''
+
+search_bar_props = 'rounded outlined color=teal bg-color=grey-1 input-style="color: black; font-size: 20px"'
+
+def display_dog():
+    src = 'https://lottie.host/0bc74d91-888a-453c-a078-cfefaf784e45/FJLJ2LV1bw.json'
+    ui.html(f'<lottie-player src="{src}" loop autoplay />').style(
+        "width: 400px; margin: 0 auto; text-align: center; ")
 
 
 def add_ui_routes():
@@ -31,16 +37,16 @@ def add_ui_routes():
 
         # Center search bar
         with ui.element('div').classes('search-container'):
-            ui.html('<i class="ti-search search-icon"></i>')
+            # ui.html('<i class="ti-search search-icon"></i>')
             # ui.icon('eva-search-outline')
             search_input = ui.input(placeholder='Search for Pets...')
+            # On hitting enter, navigate to search page
             search_input.on('keydown.enter', lambda: ui.navigate.to(f'/search?query={search_input.value}'))
+            search_input.props(search_bar_props) # Customize nicegui input box
+            with search_input.add_slot('prepend'):
+                ui.icon('eva-search-outline').props('size=30px')
 
-            search_input.props('borderless')
-
-        src = 'https://lottie.host/0bc74d91-888a-453c-a078-cfefaf784e45/FJLJ2LV1bw.json'
-        ui.html(f'<lottie-player src="{src}" loop autoplay />').style(
-            "width: 400px; margin: 0 auto; text-align: center; ")
+        display_dog()
 
     @ui.page("/search")
     async def search_page(query: str = None, sex: str = "Any", breed: str = None, min_age: int = 1, max_age: int = 30):
