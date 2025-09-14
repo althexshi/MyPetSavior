@@ -23,6 +23,8 @@
 ---
 
 
+
+
 ## Features
 - <small>🔎 **Smart search & filters** — find pets by species, breed, age, size, and location.</small>
 - <small>🏠 **Shelter aggregation** — pulls listings from participating shelters into a single, consistent format.</small>
@@ -50,22 +52,41 @@
 3. <small>**`database/`** — DB schema, migrations, and data access layer (ORM).</small>
 4. <small>**`scraping/`** — pluggable scrapers that fetch and normalize shelter listings.</small>
 
-<small>**Data flow (high level):**  
-Shelter Websites ──► scraping/ ──► database/ ──► backend/ ──► frontend/</small>
+**Data flow (high level):**
+
+```text
+Shelter Websites 
+     │
+     ▼
+  scraping/
+     │
+     ▼
+  database/
+     │
+     ▼
+  backend/
+     │
+     ▼
+  frontend/
+```
 
 
 ---
 
 
 ## Project Structure
+
+```bash
 PetSavior/
-├─ backend/ # API server (routers, services, models, config)
-├─ frontend/ # Templates/static or client app for the UI
-├─ database/ # DB schema, migrations, ORM models
-├─ scraping/ # Individual scrapers + normalization
-├─ requirements.txt # Python dependencies
-├─ test_main.http # Handy HTTP requests for local API testing
-└─ README.md
+├── backend/         # API server (routers, services, models, config)
+├── frontend/        # Templates/static files or client app for the UI
+├── database/        # DB schema, migrations, ORM models
+├── scraping/        # Individual scrapers + normalization
+│
+├── requirements.txt # Python dependencies
+├── test_main.http   # Handy HTTP requests for local API testing
+└── README.md        # Project documentation
+```
 
 
 ---
