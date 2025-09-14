@@ -45,12 +45,12 @@
 
 
 ## Architecture
-<small>PetSavior is split into four modules:</small>
+<small>PetSavior runs as a single ASGI app with Python-powered UI:</small>
 
-1. <small>**`backend/`** — REST API for searching pets, health checks, and serving frontend pages/assets.</small>
-2. <small>**`frontend/`** — UI templates/assets that render search, listings, and pet detail pages.</small>
-3. <small>**`database/`** — DB schema, migrations, and data access layer (ORM).</small>
-4. <small>**`scraping/`** — pluggable scrapers that fetch and normalize shelter listings.</small>
+1. <small>**`api/` (FastAPI)** — JSON endpoints for pets, shelters, and health checks.</small>  
+2. <small>**`ui/` (NiceGUI)** — Python-based pages/components (no HTML templates needed).</small>  
+3. <small>**`database/`** — DB schema, migrations, and data access layer (SQLAlchemy).</small>  
+4. <small>**`scraping/`** — pluggable scrapers that fetch and normalize shelter listings.</small>  
 
 **Data flow (high level):**
 
@@ -94,10 +94,13 @@ PetSavior/
 
 ## Tech Stack
 - <small>**Language:** Python 3.10+</small>
-- <small>**Backend:** FastAPI (ASGI), Uvicorn/Gunicorn</small>
+- <small>**Backend/UI:** NiceGUI (Python-based UI) + FastAPI (ASGI)</small>
+- <small>**Server:** Uvicorn/Gunicorn</small>
 - <small>**DB/ORM:** SQLAlchemy (SQLite locally; Postgres-ready for production)</small>
 - <small>**Scraping:** requests, beautifulsoup4 (pluggable per-shelter adapters)</small>
-- <small>**Deploy:** Render</small>
+- <small>**Deploy:** Render </small>
+
+
 
 
 ---
