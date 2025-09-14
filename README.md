@@ -76,8 +76,7 @@ PetSavior/
 - <small>**Backend:** FastAPI (ASGI), Uvicorn/Gunicorn</small>
 - <small>**DB/ORM:** SQLAlchemy (SQLite locally; Postgres-ready for production)</small>
 - <small>**Scraping:** requests, beautifulsoup4 (pluggable per-shelter adapters)</small>
-- <small>**Templating/UI:** Jinja2 or static assets served by the backend</small>
-- <small>**Deploy:** Any ASGI-capable host (e.g., Render, Fly.io, Railway)</small>
+- <small>**Deploy:** Render</small>
 
 
 ---
