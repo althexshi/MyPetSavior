@@ -9,8 +9,6 @@
 ## Table of Contents
 - <small>[Features](#features)</small>
 
-- <small>[Live Demo](#live-demo)</small>
-
 - <small>[Architecture](#architecture)</small>
 
 - <small>[Project Structure](#project-structure)</small>
@@ -35,10 +33,6 @@
 
 
 ---
-
-
-## Live Demo
-- <small>**Web:** https://petsavior.onrender.com</small>
 
 
 ---
