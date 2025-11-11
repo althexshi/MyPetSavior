@@ -2,6 +2,8 @@
 
 <small>PetSavior helps people discover adoptable pets by aggregating listings from participating shelters and making them searchable, filterable, and easy to share.</small>
 
+<img width="2188" height="1721" alt="ASOC" src="https://github.com/user-attachments/assets/35e130dc-e746-41ec-878c-098fd9d1ece0" />
+
 
 ---
 
@@ -16,8 +18,6 @@
 - <small>[Tech Stack](#tech-stack)</small>
 
 - <small>[Team](#team)</small>
-
-- <small>[Award](#award)</small>
 
 
 ---
@@ -109,10 +109,6 @@ PetSavior/
 - <small>Andy Martin-Valencia</small>
 
 
-
-## Award
-
-<img width="2188" height="1721" alt="ASOC" src="https://github.com/user-attachments/assets/5cfc6b73-97f3-402d-ad6c-60fd9dc58c81" />
 
 
 
